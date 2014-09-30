@@ -1,12 +1,16 @@
+var config = require('./config.js');
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var passport = require('passport');
+var FacebookStrategy = require('passport-facebook').Strategy;
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var rooms = require('.routes/rooms');
 
 var app = express();
 
@@ -22,6 +26,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
+
+passport.use(new FacebookStrategy({
+  clientID: config.facebookAppId
+}));
 
 app.use('/', routes);
 app.use('/users', users);
