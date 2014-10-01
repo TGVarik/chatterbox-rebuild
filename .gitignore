@@ -67,5 +67,7 @@ com_crashlytics_export_strings.xml
 
 mongo/
 config.js
-public/stylesheets/*.css
+public/css/*.css
 data/
+bower_components/
+views/*.html

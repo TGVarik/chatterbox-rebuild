@@ -1,0 +1,72 @@
+
+.title
+  text-align center
+  margin-top: 60px
+  top 20%
+  width 100%
+  font normal 200 4em 'Idlewild A', 'Idlewild B', sans-serif
+
+.subtitle
+  text-align center
+  width 100%
+  margin-top 5%
+  font normal 200 2em 'Idlewild A', 'Idlewild B', sans-serif
+  transition all 1s
+
+.hidden
+  opacity 0
+.subtitle.hidden
+  transform translate(0px, 50px)
+.auth.facebook.hidden
+  transform translate(-500px)
+.auth.google.hidden
+  transform translate(500px)
+
+.auth.removed
+  transform translate(0px, 500px)
+  opacity 0
+
+.auth.facebook.clicked
+  transform translate(220px)
+.auth.google.clicked
+  transform translate(-220px)
+
+#authbox
+  position absolute
+  display block
+  width intrinsic
+  margin-left auto
+  margin-right -50%
+  top 50%
+  left 50%
+  transform translate(-50%,-50%)
+
+path
+  transform translate(5px,5px) scale(0.5)
+
+.logo
+  margin auto
+  position relative
+  top 0
+  left 0
+  bottom 0
+  right 0
+
+.auth
+  float left
+  height 100px
+  width 100px
+  margin 60px
+  background-color transparent
+  border-radius 50px
+  transition all 1.2s ease-in-out
+
+.auth:hover
+  transform scale(1.1)
+
+.facebook:hover
+  box-shadow 0px 0px 10px 5px lighten(#3b5998, 20)
+.twitter:hover
+  box-shadow 0px 0px 10px 5px lighten(#55acee, 20)
+.google:hover
+  box-shadow 0px 0px 10px 5px lighten(#dd4b39, 20)

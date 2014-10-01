@@ -1,0 +1,18 @@
+//
+   Created by tom on 9/30/14.
+extends layout
+
+mixin authbox(auth)
+  div(class='auth #{auth.service} hidden', data-service='#{auth.service}')
+    svg.logo(width='100px', height='100px')
+      circle(r='50px', cx='50px', cy='50px', fill='#{auth.fill}')
+      path(d='#{auth.d}', fill='white')
+
+block script
+  script(src='/js/login.js')
+
+block content
+  .subtitle.hidden Choose a login
+  #authbox
+    each auth in auths
+      +authbox(auth)
