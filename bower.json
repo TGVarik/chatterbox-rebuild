@@ -18,6 +18,8 @@
     "tests"
   ],
   "dependencies": {
-    "jquery": "~2.1.1"
+    "jquery": "~2.1.1",
+    "jquery.terminal": "~0.8.8",
+    "ascii-table": "~0.0.4"
   }
 }

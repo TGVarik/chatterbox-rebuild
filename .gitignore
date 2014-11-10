@@ -66,7 +66,7 @@ com_crashlytics_export_strings.xml
 
 
 mongo/
-config.js
+routes/config.js
 public/css/*.css
 data/
 bower_components/

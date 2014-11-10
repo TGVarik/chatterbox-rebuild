@@ -1,0 +1,17 @@
+//
+   Created by tom on 10/4/14.
+
+extends layout
+
+block style
+  link(rel='stylesheet', href='/css/jquery.terminal/jquery.terminal.css')
+
+block script
+  script(src='js/jquery.terminal/jquery.terminal-src.js')
+  script(src='js/ascii-table/ascii-table.min.js')
+  script(src='js/chat.js')
+  script(type='text/javascript').
+    var local_user =!{JSON.stringify(user)}
+
+block content
+  #term

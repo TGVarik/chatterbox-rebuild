@@ -7,7 +7,7 @@ $(function(){
   }, 1000);
   setTimeout(function(){
     $('.subtitle').removeClass('hidden');
-  }, 3000);
+  }, 1000);
   $('.auth').each(function(idx, item){
     $(item).on('click', function(){
       var clicked = this;
@@ -15,8 +15,14 @@ $(function(){
       $('.auth').each(function(idx, item){
         if (item !== clicked){
           setTimeout(function(){
+            $(item).addClass('dropped');
+          }, 100);
+          setTimeout(function(){
             $(item).addClass('removed');
-          }, 250);
+          }, 600);
+          setTimeout(function(){
+            $(item).remove();
+          }, 1600);
         }
       });
       setTimeout(function(){
@@ -24,7 +30,7 @@ $(function(){
       }, 450);
       setTimeout(function(){
         window.location.href = '/auth/' + $(clicked).data('service');
-      }, 1000);
+      }, 2000);
     });
   });
 });

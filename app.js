@@ -1,5 +1,4 @@
-var config = require('./config.js');
-var auths = require('./auths.js');
+var config = require('./routes/config.js');
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -10,64 +9,8 @@ var stylus = require('stylus');
 var nib = require('nib');
 var passport = require('passport');
 var session = require('express-session');
-var FacebookStrategy = require('passport-facebook').Strategy;
-var TwitterStrategy = require('passport-twitter').Strategy;
-var GithubStrategy = require('passport-github').Strategy;
-var GoogleStrategy = require('passport-google').Strategy;
-
-passport.serializeUser(function(user, done) {
-  done(null, user);
-});
-passport.deserializeUser(function(obj, done) {
-  done(null, obj);
-});
-
-passport.use(new FacebookStrategy({
-      clientID: config.facebook.clientID,
-      clientSecret: config.facebook.clientSecret,
-      callbackURL: config.facebook.callbackURL
-    },
-    function(accessToken, refreshToken, profile, done) {
-      process.nextTick(function () {
-        return done(null, profile);
-      });
-    }
-));
-passport.use(new TwitterStrategy({
-      consumerKey: config.twitter.consumerKey,
-      consumerSecret: config.twitter.consumerSecret,
-      callbackURL: config.twitter.callbackURL
-    },
-    function(accessToken, refreshToken, profile, done) {
-      process.nextTick(function () {
-        return done(null, profile);
-      });
-    }
-));
-passport.use(new GithubStrategy({
-      clientID: config.github.clientID,
-      clientSecret: config.github.clientSecret,
-      callbackURL: config.github.callbackURL
-    },
-    function(accessToken, refreshToken, profile, done) {
-      process.nextTick(function () {
-        return done(null, profile);
-      });
-    }
-));
-passport.use(new GoogleStrategy({
-      returnURL: config.google.returnURL,
-      realm: config.google.realm
-    },
-    function(identifier, profile, done) {
-      process.nextTick(function () {
-        profile.identifier = identifier;
-        return done(null, profile);
-      });
-    }
-));
-
-
+var auth = require('./routes/auth');
+var db = require('./db');
 var app = express();
 
 var compile = function(str, path){
@@ -89,50 +32,38 @@ app.use(cookieParser());
 app.use(stylus.middleware({src: path.join(__dirname, 'public'), compile: compile}));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/js/jquery', express.static(__dirname + '/bower_components/jquery/dist'));
+app.use('/js/jquery.terminal', express.static(__dirname + '/bower_components/jquery.terminal/js'));
+app.use('/css/jquery.terminal', express.static(__dirname + '/bower_components/jquery.terminal/css'));
+app.use('js/ascii-table', express.static(__dirname + '/bower_components/ascii-table'));
+
 app.use(session({secret: "like flaming loaves"}));
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.get('/',
-        function(req, res){
-          res.render('login', { title: "Chatterbox", auths: auths });
-        });
-app.get('/auth/facebook',
-        passport.authenticate('facebook'),
-        function(req, res){
-        });
-app.get('/auth/facebook/callback',
-        passport.authenticate('facebook', { failureRedirect: '/' }),
-        function(req, res) {
-          res.redirect('/account');
-         });
-app.get('/auth/twitter',
-        passport.authenticate('twitter'),
-        function(req, res){
-        });
-app.get('/auth/twitter/callback',
-        passport.authenticate('twitter', { failureRedirect: '/' }),
-        function(req, res) {
-          res.redirect('/account');
-        });
-app.get('/auth/github',
-        passport.authenticate('github'),
-        function(req, res){
-        });
-app.get('/auth/github/callback',
-        passport.authenticate('github', { failureRedirect: '/' }),
-        function(req, res) {
-          res.redirect('/account');
-        });
-app.get('/auth/google',
-    passport.authenticate('google'),
-    function(req, res){
-    });
-app.get('/auth/google/callback',
-    passport.authenticate('google', { failureRedirect: '/' }),
-    function(req, res) {
-      res.redirect('/account');
-    });
+app.use('/auth', auth);
+
+app.get('/', function(req, res) {
+  if (req.user) {
+    res.redirect('/chat')
+  } else {
+    res.redirect('/auth')
+  }
+});
+
+app.get('/chat', function(req, res){
+  if (req.user) {
+    res.render('chat', {user: req.user});
+  } else {
+    res.redirect('/auth')
+  }
+});
+
+app.get('/rooms', function(req, res){
+  if (req.user){
+    res.json(db.activeUsers());
+  }
+});
+
  // var root = app.get('env') === 'production' ? config.appRoot : "http://localhost:3000";
 
 // view engine setup
